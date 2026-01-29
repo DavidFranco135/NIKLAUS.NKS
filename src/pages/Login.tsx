@@ -63,8 +63,8 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           </div>
           
           <h1 className="text-6xl font-extrabold text-white leading-[1.1] mb-8 tracking-tight">
-            NIKLAUS>NKS <br/>
-            <span className="text-emerald-500">PEIDOFLEX.</span>
+            NIKLAUS&gt;NKS <br/>
+            <span className="text-emerald-500">PEDIDOFLEX.</span>
           </h1>
           <p className="text-slate-400 text-xl max-w-lg leading-relaxed">
             Plataforma centralizada para representantes e lojistas. Escaneie, selecione e processe pedidos com integração total Tray API.
@@ -85,13 +85,18 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
       {/* Lado Direito - Form de Acesso */}
       <div className="w-full lg:w-2/5 flex items-center justify-center p-8 bg-slate-50">
-        <div className="w-full max-w-md">
+        <div className="w-full max-md">
           <div className="mb-12">
             <h2 className="text-3xl font-extrabold text-slate-900 mb-2">Portal do Parceiro</h2>
             <p className="text-slate-500 font-medium">Insira suas credenciais para gerenciar suas unidades.</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <div className="p-4 bg-red-50 text-red-600 rounded-xl text-sm font-bold border border-red-100">
+                {error}
+              </div>
+            )}
             <div className="space-y-2">
               <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">E-mail Corporativo</label>
               <input 
