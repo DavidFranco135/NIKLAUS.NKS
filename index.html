@@ -23,10 +23,18 @@
 </script>
 </head>
 <body class="text-slate-900 bg-slate-50">
-    <div id="root"></div>
+    <div id="root">
+        <!-- Este conteúdo é substituído assim que o React carrega -->
+        <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: sans-serif; color: #64748b;">
+            <div style="text-align: center;">
+                <div style="font-weight: 800; font-size: 24px; color: #0f172a; margin-bottom: 8px;">NIKLAUS.NKS</div>
+                <div style="font-size: 14px; opacity: 0.6;">Iniciando portal de vendas...</div>
+            </div>
+        </div>
+    </div>
     <!-- 
-      IMPORTANTE: No Vite, não usamos importmap. 
-      O Vite resolve as dependências do package.json automaticamente ao importar o index.tsx.
+      IMPORTANTE: No ambiente Vite, o script type="module" deve apontar diretamente 
+      para o ponto de entrada. O Vite cuidará de resolver o React e outras libs.
     -->
     <script type="module" src="/index.tsx"></script>
 </body>
