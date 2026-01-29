@@ -1,35 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import { User, CNPJ, Product, CartItem, Order } from './types';
-import { INITIAL_MOCK_PRODUCTS, INITIAL_MOCK_CNPJS } from './mockApi';
-import Login from './Login';
-import Dashboard from './Dashboard';
-import History from './History';
-import News from './News';
-import Backoffice from './Backoffice';
-import Sidebar from './Sidebar';
-import Navbar from './Navbar';
-import CNPJSelector from './CNPJSelector';
+import { INITIAL_MOCK_PRODUCTS, INITIAL_MOCK_CNPJS } from './services/mockApi';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import History from './pages/History';
+import News from './pages/News';
+import Backoffice from './pages/Backoffice';
+import Sidebar from './components/Sidebar';
+import Navbar from './components/Navbar';
+import CNPJSelector from './components/CNPJSelector';
 
 const App: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    try {
+      const saved = localStorage.getItem('b2b_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      return null;
+    }
+  });
+
   const [selectedCnpj, setSelectedCnpj] = useState<CNPJ | null>(null);
   const [currentPage, setCurrentPage] = useState<'catalog' | 'history' | 'news' | 'backoffice'>('catalog');
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCnpjModalOpen, setIsCnpjModalOpen] = useState(false);
   
   const [products, setProducts] = useState<Product[]>(() => {
-    const saved = localStorage.getItem('b2b_products_db');
-    return saved ? JSON.parse(saved) : INITIAL_MOCK_PRODUCTS;
+    try {
+      const saved = localStorage.getItem('b2b_products_db');
+      return saved ? JSON.parse(saved) : INITIAL_MOCK_PRODUCTS;
+    } catch (e) {
+      return INITIAL_MOCK_PRODUCTS;
+    }
   });
 
   const [cnpjs, setCnpjs] = useState<CNPJ[]>(() => {
-    const saved = localStorage.getItem('b2b_cnpjs_db');
-    return saved ? JSON.parse(saved) : INITIAL_MOCK_CNPJS;
+    try {
+      const saved = localStorage.getItem('b2b_cnpjs_db');
+      return saved ? JSON.parse(saved) : INITIAL_MOCK_CNPJS;
+    } catch (e) {
+      return INITIAL_MOCK_CNPJS;
+    }
   });
 
   const [orders, setOrders] = useState<Order[]>(() => {
-    const saved = localStorage.getItem('b2b_orders_db');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('b2b_orders_db');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
   });
 
   useEffect(() => {
@@ -37,11 +57,6 @@ const App: React.FC = () => {
     localStorage.setItem('b2b_cnpjs_db', JSON.stringify(cnpjs));
     localStorage.setItem('b2b_orders_db', JSON.stringify(orders));
   }, [products, cnpjs, orders]);
-
-  useEffect(() => {
-    const savedUser = localStorage.getItem('b2b_user');
-    if (savedUser) setUser(JSON.parse(savedUser));
-  }, []);
 
   const handleLogin = (userData: User) => {
     const userToSave = { ...userData };
@@ -79,7 +94,7 @@ const App: React.FC = () => {
   if (!selectedCnpj || isCnpjModalOpen) {
     return (
       <CNPJSelector 
-        cnpjs={user.role === 'ADMIN' ? cnpjs : user.cnpjs} 
+        cnpjs={user.role === 'ADMIN' ? cnpjs : (user.cnpjs || [])} 
         onSelect={handleCnpjSelect} 
         currentSelection={selectedCnpj}
       />
