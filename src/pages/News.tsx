@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { NewsPost } from '../types';
-import { b2bService } from '../services/mockApi';
+import { b2bService } from './mockApi';
 
 const News: React.FC = () => {
   const [news, setNews] = useState<NewsPost[]>([]);
