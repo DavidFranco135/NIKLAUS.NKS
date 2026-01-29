@@ -1,6 +1,6 @@
-
 import React, { useState } from 'react';
-import { CNPJ, Product, CartItem, Order } from '../types';
+// CORREÇÃO: Removido "../" pois os arquivos estão na mesma pasta
+import { CNPJ, Product, CartItem, Order } from './types';
 import { trayApi } from './mockApi';
 
 interface DashboardProps {
@@ -32,7 +32,6 @@ const Dashboard: React.FC<DashboardProps> = ({
     if (cart.length === 0) return;
     setIsOrdering(true);
     
-    // Simulação de passos de sincronização para garantir que o usuário veja que estamos enviando o cliente
     const steps = [
       "Iniciando integração Tray...",
       "Sincronizando Dados Cadastrais...",
@@ -80,7 +79,6 @@ const Dashboard: React.FC<DashboardProps> = ({
            </a>
            <p className="mt-4 text-[9px] text-slate-400 font-bold uppercase tracking-[0.2em]">O endereço e CNPJ já foram pré-carregados.</p>
         </div>
-        
         <button onClick={() => setLastOrder(null)} className="mt-10 text-emerald-600 font-black text-sm uppercase tracking-widest hover:underline">Novo Pedido B2B</button>
       </div>
     );
@@ -107,7 +105,7 @@ const Dashboard: React.FC<DashboardProps> = ({
            </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 overflow-y-auto pb-20 px-2 scrollbar-hide">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 overflow-y-auto pb-20 px-2">
           {filteredProducts.map(product => (
             <div key={product.id} className="bg-white rounded-[3rem] border border-slate-100 overflow-hidden hover:shadow-2xl hover:shadow-slate-200/50 transition-all group flex flex-col border-b-4 border-b-transparent hover:border-b-emerald-500">
               <div className="h-64 overflow-hidden relative bg-slate-50">
@@ -144,7 +142,7 @@ const Dashboard: React.FC<DashboardProps> = ({
             <span className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-[10px] font-black">{cart.length} ITENS</span>
          </div>
          
-         <div className="flex-1 overflow-y-auto p-8 space-y-6 scrollbar-hide">
+         <div className="flex-1 overflow-y-auto p-8 space-y-6">
            {cart.length === 0 ? (
              <div className="text-center py-32 opacity-10 flex flex-col items-center">
                <svg className="w-24 h-24 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
