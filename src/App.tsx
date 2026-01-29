@@ -36,7 +36,7 @@ const App: React.FC = () => {
   useEffect(() => {
     if (!db) return;
 
-    // Sincronização em tempo real (Modular Syntax)
+    // Sincronização em tempo real
     const unsubProducts = onSnapshot(collection(db, 'products'), (snapshot) => {
       setProducts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product)));
     });
@@ -75,26 +75,26 @@ const App: React.FC = () => {
   }, []);
 
   const handleLogin = async (email: string, password?: string) => {
-    // 1. Tenta encontrar no Firestore primeiro
-    let foundUser = users.find(u => u.email === email && u.password === password);
+    // 1. PRIORIDADE TOTAL: Master Admin (David ou Admin hardcoded)
+    // Isso evita que um registro acidental de "Representative" no Firestore bloqueie o Admin
+    let foundUser = INITIAL_MOCK_USERS.find(u => u.email === email && u.password === password);
     
-    // 2. Fallback imediato para Master Admin se não houver dados no banco
+    // 2. Se não for master, busca no Firestore
     if (!foundUser) {
-      foundUser = INITIAL_MOCK_USERS.find(u => u.email === email && u.password === password);
-      
-      // Se for o seu usuário mestre, vamos injetar ele no banco para garantir consistência
-      if (foundUser && foundUser.role === 'ADMIN') {
-        try {
-          await setDoc(doc(db!, 'users', foundUser.id), foundUser);
-        } catch (e) {
-          console.warn("Erro ao persistir admin mestre, mas permitindo acesso local.");
-        }
-      }
+      foundUser = users.find(u => u.email === email && u.password === password);
     }
 
     if (foundUser) {
       setUser(foundUser);
       sessionStorage.setItem('nk_session_user', JSON.stringify(foundUser));
+      
+      // Se for admin, garante que ele está no Firestore para consistência das listas
+      if (foundUser.role === 'ADMIN') {
+        try {
+          await setDoc(doc(db!, 'users', foundUser.id), foundUser);
+        } catch (e) { console.warn("Erro ao persistir admin, mas logando."); }
+      }
+      
       setIsCnpjModalOpen(true);
     } else {
       alert("Acesso Negado: Verifique seu e-mail e senha.");
@@ -102,7 +102,7 @@ const App: React.FC = () => {
   };
 
   const handleRegister = async (name: string, category: string, email: string, password?: string) => {
-    if (users.some(u => u.email === email)) {
+    if (users.some(u => u.email === email) || email === 'davidbhmg147@gmail.com') {
       alert("Este e-mail já está em análise ou cadastrado.");
       return;
     }
@@ -132,10 +132,10 @@ const App: React.FC = () => {
     sessionStorage.removeItem('nk_session_user');
   };
 
-  const handleUpsertProduct = async (p: Product) => { await setDoc(doc(db!, 'products', p.id), p); };
-  const handleUpsertCnpj = async (c: CNPJ) => { await setDoc(doc(db!, 'cnpjs', c.id), c); };
-  const handleUpsertUser = async (u: User) => { await setDoc(doc(db!, 'users', u.id), u); };
-  const handleOrderCreated = async (order: Order) => { await setDoc(doc(db!, 'orders', order.id), order); };
+  const handleUpsertProduct = async (p: Product) => { if(db) await setDoc(doc(db, 'products', p.id), p); };
+  const handleUpsertCnpj = async (c: CNPJ) => { if(db) await setDoc(doc(db, 'cnpjs', c.id), c); };
+  const handleUpsertUser = async (u: User) => { if(db) await setDoc(doc(db, 'users', u.id), u); };
+  const handleOrderCreated = async (order: Order) => { if(db) await setDoc(doc(db, 'orders', order.id), order); };
 
   if (loading) return (
     <div className="h-screen flex flex-col items-center justify-center bg-slate-900 text-white gap-4">
@@ -146,8 +146,10 @@ const App: React.FC = () => {
 
   if (!user) return <Login onLogin={handleLogin} onRegister={handleRegister} />;
 
+  // Se for admin, ele tem acesso a todos os CNPJs, se não, apenas os dele
   const allowedCnpjs = cnpjs.filter(c => user.role === 'ADMIN' || user.cnpjs.includes(c.id));
 
+  // CORREÇÃO CRÍTICA: Se for ADMIN, ele NUNCA deve ver a tela de bloqueio "Aguardando Liberação"
   if (user.role !== 'ADMIN' && allowedCnpjs.length === 0) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 text-center">
@@ -158,6 +160,30 @@ const App: React.FC = () => {
           <h2 className="text-2xl font-black text-slate-900 mb-4">Aguardando Liberação</h2>
           <p className="text-slate-500 font-medium leading-relaxed mb-6">Olá, <strong>{user.name}</strong>! Seu cadastro foi recebido. Um administrador entrará em contato para vincular suas unidades de faturamento.</p>
           <button onClick={handleLogout} className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black hover:bg-black transition-all">Sair do Portal</button>
+        </div>
+      </div>
+    );
+  }
+
+  // Se não houver CNPJs no banco e for admin, vamos mostrar o Backoffice primeiro para ele poder criar um
+  if (selectedCnpj === null && allowedCnpjs.length === 0 && user.role === 'ADMIN') {
+    if (currentPage !== 'backoffice') setCurrentPage('backoffice');
+    // Para admin entrar sem CNPJ, precisamos simular um objeto nulo ou forçar o Backoffice
+    return (
+      <div className="flex min-h-screen bg-slate-50 text-slate-900">
+        <Sidebar currentPage={currentPage} onPageChange={setCurrentPage} userRole={user.role} />
+        <div className="flex-1 flex flex-col h-screen overflow-hidden">
+          <Navbar user={user} selectedCnpj={{ name: 'Sem Unidade', id: 'none', number: '000', distributor: 'Niklaus', trayGroupId: 'none' }} onSwitchCnpj={() => {}} onLogout={handleLogout} cartCount={0} />
+          <main className="flex-1 overflow-y-auto p-6 md:p-10 animate-fade-in">
+             <Backoffice 
+                cnpjs={cnpjs}
+                onUpsertCnpj={handleUpsertCnpj}
+                products={products}
+                onUpsertProduct={handleUpsertProduct}
+                users={users}
+                onUpsertUser={handleUpsertUser}
+              />
+          </main>
         </div>
       </div>
     );
