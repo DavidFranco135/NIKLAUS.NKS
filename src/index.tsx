@@ -3,11 +3,18 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
 
-const rootElement = document.getElementById('root');
+/**
+ * Ponto de entrada otimizado para React 19 no ambiente Vite.
+ * Removemos qualquer dependência de scripts externos via HTML para evitar 'Tela Branca'.
+ */
+const startApp = () => {
+  const rootElement = document.getElementById('root');
 
-if (!rootElement) {
-  console.error("Erro crítico: Elemento root não encontrado no DOM.");
-} else {
+  if (!rootElement) {
+    console.error("Erro Fatal: #root não encontrado no DOM.");
+    return;
+  }
+
   try {
     const root = ReactDOM.createRoot(rootElement);
     root.render(
@@ -16,6 +23,13 @@ if (!rootElement) {
       </React.StrictMode>
     );
   } catch (error) {
-    console.error("Erro ao renderizar a aplicação:", error);
+    console.error("Falha ao inicializar a UI do Niklaus Portal:", error);
   }
+};
+
+// Garante que o DOM esteja pronto antes de montar a aplicação
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', startApp);
+} else {
+  startApp();
 }
