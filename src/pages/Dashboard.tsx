@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { CNPJ, Product, CartItem, Order } from '../types';
-import { trayApi } from '../services/mockApi';
+import { trayApi } from './mockApi';
 
 interface DashboardProps {
   cnpj: CNPJ;
