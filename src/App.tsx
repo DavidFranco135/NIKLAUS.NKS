@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { User, CNPJ, Product, CartItem, Order } from './types';
-import { INITIAL_MOCK_PRODUCTS, INITIAL_MOCK_CNPJS } from './mockApi'; // Removido /services
-import Login from './Login'; // Removido /pages
-import Dashboard from './Dashboard'; // Removido /pages
-import History from './History'; // Removido /pages
-import News from './News'; // Removido /pages
-import Backoffice from './Backoffice'; // Removido /pages
-import Sidebar from './Sidebar'; // Removido /components
-import Navbar from './Navbar'; // Removido /components
-import CNPJSelector from './CNPJSelector'; // Removido /components
+import { INITIAL_MOCK_PRODUCTS, INITIAL_MOCK_CNPJS } from './mockApi';
+import Login from './Login';
+import Dashboard from './Dashboard';
+import History from './History';
+import News from './News';
+import Backoffice from './Backoffice';
+import Sidebar from './Sidebar';
+import Navbar from './Navbar';
+import CNPJSelector from './CNPJSelector';
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
