@@ -1,5 +1,5 @@
 
-import { Product, Order, CNPJ, User, NewsPost } from '../types';
+import { Product, Order, CNPJ, User, NewsPost } from './types';
 
 export const INITIAL_MOCK_PRODUCTS: Product[] = [
   { id: '1', name: 'Suco Natural Integral 1L', price: 12.50, stock: 150, category: 'Bebidas', image: 'https://images.unsplash.com/photo-1621506289937-4c721a31a886?auto=format&fit=crop&q=80&w=400' },
