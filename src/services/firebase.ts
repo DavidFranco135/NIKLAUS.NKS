@@ -1,7 +1,12 @@
-import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
-import { getAuth, Auth } from 'firebase/auth';
-import { getFirestore, Firestore } from 'firebase/firestore';
-import { getAnalytics, Analytics } from 'firebase/analytics';
+// Fix: Separating value and type imports for Firebase to resolve "no exported member" errors in modular SDK
+import { initializeApp, getApps } from 'firebase/app';
+import type { FirebaseApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import type { Auth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import type { Firestore } from 'firebase/firestore';
+import { getAnalytics } from 'firebase/analytics';
+import type { Analytics } from 'firebase/analytics';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBUvwY-e7h0KZyFJv7n0ignpzlMUGJIurU",
