@@ -31,7 +31,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, onPageChange, userRole }
       <div className="p-10">
         <div className="flex items-center gap-3">
            <div className="w-9 h-9 bg-slate-900 rounded-lg flex items-center justify-center text-white text-xs font-black">NK</div>
-           <span className="font-extrabold text-slate-900 tracking-tighter uppercase text-sm">Niklaus Portal</span>
+           <span className="font-extrabold text-slate-900 tracking-tighter uppercase text-sm">Nklaus Portal</span>
         </div>
       </div>
       
