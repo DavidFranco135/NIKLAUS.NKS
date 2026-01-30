@@ -27,13 +27,13 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       if (isRep || isAdmin) {
         const mockCnpjs: CNPJ[] = [
           { id: 'c1', name: 'KFC LANCHES', number: '12.345.678/0001-90', distributor: 'Distribuidora Norte' },
-          { id: 'c2', name: 'NIKLAUS', number: '98.765.432/0001-21', distributor: 'Distribuidora Sul' },
+          { id: 'c2', name: '', number: '98.765.432/0001-21', distributor: 'Distribuidora Sul' },
         ];
         
         const user: User = {
           id: email === 'davidbhmg147@gmail.com' ? 'u_admin_david' : 'u1',
           email: email,
-          name: email === 'davidbhmg147@gmail.com' ? 'David Admin' : 'Usuário Niklaus',
+          name: email === 'davidbhmg147@gmail.com' ? 'David Admin' : 'Usuário ',
           role: isAdmin ? 'ADMIN' : 'REPRESENTATIVE',
           cnpjs: mockCnpjs
         };
@@ -59,11 +59,11 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-16">
             <div className="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-emerald-500/20">NK</div>
-            <span className="text-white text-xl font-bold tracking-tighter uppercase">Niklaus B2B</span>
+            <span className="text-white text-xl font-bold tracking-tighter uppercase">Nklaus B2B</span>
           </div>
           
           <h1 className="text-6xl font-extrabold text-white leading-[1.1] mb-8 tracking-tight">
-            NIKAUS>NKS <br/>
+            NKAUS>NKS <br/>
             <span className="text-emerald-500">PEIDOFLEX.</span>
           </h1>
           <p className="text-slate-400 text-xl max-w-lg leading-relaxed">
