@@ -63,7 +63,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           </div>
           
           <h1 className="text-6xl font-extrabold text-white leading-[1.1] mb-8 tracking-tight">
-            NIKLAUS>NKS <br/>
+            NIKAUS>NKS <br/>
             <span className="text-emerald-500">PEIDOFLEX.</span>
           </h1>
           <p className="text-slate-400 text-xl max-w-lg leading-relaxed">
